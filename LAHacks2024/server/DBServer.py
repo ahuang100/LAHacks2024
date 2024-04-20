@@ -1,13 +1,14 @@
 import reflex as rx
 from pymongo import MongoClient
 import uuid
+import ssl
 
 CONNECTION_STRING = "mongodb+srv://jpan287:L2pEGi2Po7dUYYX5@lahacks24.3fh9yjd.mongodb.net/?retryWrites=true&w=majority"
 MAX_PLAYERS = 8
 
-class db_server:
+class DBServer:
     def __init__(self):
-        client = MongoClient(CONNECTION_STRING)
+        client = MongoClient(CONNECTION_STRING, ssl=True, tlsAllowInvalidCertificates=True)
         self.db = client['lahacks2024']
         self.collection = self.db['rooms']
 
@@ -32,17 +33,18 @@ class db_server:
         return room_key
 
     # Allows user to join room with valid ID.
-    def join_room(self, room_key, user_name):
+    def join_room(self, room_key):
         # If room key doesn't exist, print error
         room = self.collection.find_one({'key': room_key})
         if not room:
             raise Exception('Room %s: not found' % (room_key))
         # Check if the room is full
-        num_players = self.collection.find_one({'key': room_key}, {'num_players': 1})
+        num_players = self.collection.find_one({'key': room_key}, {'num_players': 1, '_id': 0})['num_players']
         if num_players >= MAX_PLAYERS:
             raise Exception('Room %s: full' % (room_key))
         return True
     
+    # Checks if the username user wants is taken yet or not
     def check_username(self, room_key, user_name):
         # Check if the username already exists in database
         if len(self.collection.find({'player_names': {'$in': [user_name]}})) != 0:
@@ -53,3 +55,8 @@ class db_server:
         self.collection.update_one({'key': room_key}, {'$push': {'player_ids': user_id}})
         self.collection.update_one({'key': room_key}, {'$push': {'player_names': user_name}})
         return user_id
+
+    # Gets the usernames of the other players
+    def get_players(self, room_key):
+        player_names = self.collection.find({'player_names'}, {})
+        return player_names
