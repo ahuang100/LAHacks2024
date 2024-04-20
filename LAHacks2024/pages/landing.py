@@ -16,7 +16,7 @@ def index():
     return rx.center(
         #main middle content
         rx.flex(
-            rx.heading("Game", align="center", font_size="6em", padding="2px", color="grass"),
+            rx.heading("Power Parley", align="center", font_size="6em", padding="2px", color_scheme="gold"),
             rx.divider(orientation="horizontal", size="4"),
             rx.button(
                 "Create Room",
@@ -51,7 +51,22 @@ def index():
         # 'how to play' bottom box
         rx.box(
             rx.center(
-                rx.link("How to Play...", href="/guide"),
+                rx.chakra.popover(
+                    rx.chakra.popover_trigger(
+                        rx.chakra.button("How to Play")
+                    ),
+                    rx.chakra.popover_content(
+                        rx.chakra.popover_header("Game Rules"),
+                        rx.list.ordered(
+                            rx.list.item("Join game"),
+                            rx.list.item("type argument"),
+                            rx.list.item("let ai judge"),
+                        ),
+                        
+                        rx.chakra.popover_close_button(),
+                    ),
+                ),
+                # rx.link("How to Play...", href="/guide"),
                 underline="auto",
                 position="fixed",
                 bottom="0",
@@ -63,7 +78,10 @@ def index():
         ),
         width="100%",
         height="100vh",
-        background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
+        background_color= "#90EE90",
+        # background="linear-gradient(45deg, var(--tomato-9), var(--plum-9))",
+
+        # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
 
         # background="radial-gradient(circle at 22% 11%, rgba(62, 180, 137, .40), hsla(0, 0%, 100%, 0) 19%), radial-gradient(circle at 82% 25%, rgba(33, 150, 243, .36), hsla(0, 0%, 100%, 0) 35%), radial-gradient(circle at 25% 61%, rgba(250, 128, 114, .56), hsla(0, 0%, 100%, 0) 55%)",
         ext_align="center",
