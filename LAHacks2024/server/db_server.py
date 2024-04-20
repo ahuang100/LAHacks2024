@@ -32,7 +32,7 @@ class db_server:
         return room_key
 
     # Allows user to join room with valid ID.
-    def join_room(self, room_key, user_name):
+    def join_room(self, room_key):
         # If room key doesn't exist, print error
         room = self.collection.find_one({'key': room_key})
         if not room:
@@ -43,6 +43,7 @@ class db_server:
             raise Exception('Room %s: full' % (room_key))
         return True
     
+    # Checks if the username user wants is taken yet or not
     def check_username(self, room_key, user_name):
         # Check if the username already exists in database
         if len(self.collection.find({'player_names': {'$in': [user_name]}})) != 0:
@@ -53,3 +54,8 @@ class db_server:
         self.collection.update_one({'key': room_key}, {'$push': {'player_ids': user_id}})
         self.collection.update_one({'key': room_key}, {'$push': {'player_names': user_name}})
         return user_id
+
+    # Gets the usernames of the other players
+    def get_players(self, room_key):
+        player_names = self.collection.find({'player_names'}, {})
+        return player_names

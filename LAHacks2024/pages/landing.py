@@ -1,16 +1,22 @@
 import reflex as rx
+from LAHacks2024.server import db_server
 
 
-class State1(rx.State):
-    count: int = 0
-
-    def increment(self):
-        self.count += 1
-
-    def decrement(self):
-        self.count -= 1
-
-# @rx.page(route="/landing")
+class LandingState(rx.State):
+    is_admin: bool = False
+    room_key: str = ""
+    
+    def create_room(self):
+        server = db_server()
+        self.room_key = server.create_room()
+    
+    def join_room(self):
+        server = db_server()
+        print(self.room_key)
+        try:
+            server.join_room(self.room_key)
+        except Exception: 
+            print("error")
 
 def index():
     return rx.center(
@@ -20,6 +26,7 @@ def index():
             rx.divider(orientation="horizontal", size="4"),
             rx.button(
                 "Create Room",
+                on_click=LandingState.create_room,
                 border_radius="1em",
                 box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
                 background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
@@ -32,11 +39,14 @@ def index():
             ),
             rx.hstack(
                 rx.button(
-                    "Join", color_scheme="blue", radius="full",
+                    "Join", 
+                    on_click=LandingState.join_room,
+                    color_scheme="blue", 
+                    radius="full",
                     background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
 
                 ),
-                rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px"}),
+                rx.input(placeholder=" Enter Code", value=LandingState.room_key, max_length="20", radius="full", style={"width": "92px"}),
             ),
             direction="column",
             align="center",
