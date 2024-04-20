@@ -31,24 +31,25 @@ class db_server:
         self.collection.insert_one(room_data)
         return room_key
 
-    # Allows user to join a non-full room with valid ID. Creates and returns a user_id for the user in that room.
+    # Allows user to join room with valid ID.
     def join_room(self, room_key, user_name):
-        # Try to find if the room key exists
-        room = self.collection.find_one({'key': room_key})
-        if room:
-            # Check if the room is full
-            num_players = self.collection.find_one({'key': room_key}, {'num_players': 1})
-            if num_players >= MAX_PLAYERS:
-                raise Exception('Room %s: full' % (room_key))
-            # Check if the username already exists in database
-            if len(self.collection.find({'player_names': {'$in': [user_name]}})) != 0:
-                raise Exception('Room %s: name %s already taken' % (room_key, user_name))
-            # Creates a user_id, increments the number of players in room, adds user info to room
-            user_id = self.generate_user_id()
-            self.collection.update_one({'key': room_key}, {'$inc': {'num_players': 1}})
-            self.collection.update_one({'key': room_key}, {'$push': {'player_ids': user_id}})
-            self.collection.update_one({'key': room_key}, {'$push': {'player_names': user_name}})
-            return user_id
         # If room key doesn't exist, print error
-        else:
+        room = self.collection.find_one({'key': room_key})
+        if not room:
             raise Exception('Room %s: not found' % (room_key))
+        # Check if the room is full
+        num_players = self.collection.find_one({'key': room_key}, {'num_players': 1})
+        if num_players >= MAX_PLAYERS:
+            raise Exception('Room %s: full' % (room_key))
+        return True
+    
+    def check_username(self, room_key, user_name):
+        # Check if the username already exists in database
+        if len(self.collection.find({'player_names': {'$in': [user_name]}})) != 0:
+            raise Exception('Room %s: name %s already taken' % (room_key, user_name))
+        # Creates a user_id, increments the number of players in room, adds user info to room
+        user_id = self.generate_user_id()
+        self.collection.update_one({'key': room_key}, {'$inc': {'num_players': 1}})
+        self.collection.update_one({'key': room_key}, {'$push': {'player_ids': user_id}})
+        self.collection.update_one({'key': room_key}, {'$push': {'player_names': user_name}})
+        return user_id
