@@ -36,7 +36,7 @@ def index():
                     background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
 
                 ),
-                rx.input(placeholder="Enter Code...", max_length="20", radius="full"),
+                rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px"}),
             ),
             direction="column",
             align="center",
@@ -78,12 +78,12 @@ def index():
         ),
         width="100%",
         height="100vh",
-        background_color= "#90EE90",
+        # background_color= "#90EE90",
         # background="linear-gradient(45deg, var(--tomato-9), var(--plum-9))",
 
         # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
 
-        # background="radial-gradient(circle at 22% 11%, rgba(62, 180, 137, .40), hsla(0, 0%, 100%, 0) 19%), radial-gradient(circle at 82% 25%, rgba(33, 150, 243, .36), hsla(0, 0%, 100%, 0) 35%), radial-gradient(circle at 25% 61%, rgba(250, 128, 114, .56), hsla(0, 0%, 100%, 0) 55%)",
+        background="radial-gradient(circle at 22% 11%, rgba(62, 180, 137, .40), hsla(0, 0%, 0%, 0) 19%), radial-gradient(circle at 82% 25%, rgba(33, 150, 243, .36), hsla(0, 0%, 0%, 0) 35%), radial-gradient(circle at 25% 61%, rgba(250, 128, 114, .56), hsla(0, 0%, 0%, 0) 55%)",
         ext_align="center",
     ),
     
