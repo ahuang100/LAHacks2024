@@ -58,9 +58,9 @@ def index():
                     rx.chakra.popover_content(
                         rx.chakra.popover_header("Game Rules"),
                         rx.list.ordered(
-                            rx.list.item("Join game"),
-                            rx.list.item("type argument"),
-                            rx.list.item("let ai judge"),
+                            rx.list.item("Join a game"),
+                            rx.list.item("Select an ability"),
+                            rx.list.item(""),
                         ),
                         
                         rx.chakra.popover_close_button(),
