@@ -1,13 +1,14 @@
 import reflex as rx
 from pymongo import MongoClient
 import uuid
+import ssl
 
 CONNECTION_STRING = "mongodb+srv://jpan287:L2pEGi2Po7dUYYX5@lahacks24.3fh9yjd.mongodb.net/?retryWrites=true&w=majority"
 MAX_PLAYERS = 8
 
-class db_server:
+class DBServer:
     def __init__(self):
-        client = MongoClient(CONNECTION_STRING)
+        client = MongoClient(CONNECTION_STRING, ssl=True, tlsAllowInvalidCertificates=True)
         self.db = client['lahacks2024']
         self.collection = self.db['rooms']
 
@@ -38,7 +39,7 @@ class db_server:
         if not room:
             raise Exception('Room %s: not found' % (room_key))
         # Check if the room is full
-        num_players = self.collection.find_one({'key': room_key}, {'num_players': 1})
+        num_players = self.collection.find_one({'key': room_key}, {'num_players': 1, '_id': 0})['num_players']
         if num_players >= MAX_PLAYERS:
             raise Exception('Room %s: full' % (room_key))
         return True

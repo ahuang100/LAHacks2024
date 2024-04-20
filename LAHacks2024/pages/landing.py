@@ -1,5 +1,5 @@
 import reflex as rx
-from LAHacks2024.server import db_server
+from LAHacks2024.server import DBServer
 
 
 class LandingState(rx.State):
@@ -7,16 +7,20 @@ class LandingState(rx.State):
     room_key: str = ""
     
     def create_room(self):
-        server = db_server()
+        server = DBServer.DBServer()
         self.room_key = server.create_room()
+        print("Created room with room key %s" % (self.room_key))
     
-    def join_room(self):
-        server = db_server()
-        print(self.room_key)
+    def join_room(self, room_key: dict):
+        room_key = room_key['room_key']
+        print("Trying to join with room key %s" % (room_key))
+        server = DBServer.DBServer()
+        self.room_key = room_key
         try:
             server.join_room(self.room_key)
-        except Exception: 
-            print("error")
+            print("Joined room with room key %s" % (self.room_key))
+        except Exception as e: 
+            print(e)
 
 def index():
     return rx.center(
@@ -37,16 +41,25 @@ def index():
                     "opacity": 0.9,
                 },
             ),
-            rx.hstack(
-                rx.button(
-                    "Join", 
-                    on_click=LandingState.join_room,
-                    color_scheme="blue", 
-                    radius="full",
-                    background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
-
+            rx.form.root(
+                rx.hstack(
+                    rx.input(
+                        name="room_key",
+                        placeholder="Enter Code", 
+                        max_length="8", 
+                        required=True,
+                        radius="full", 
+                        style={"width": "92px"}
+                    ),
+                    rx.button(
+                        "Join", 
+                        type="submit",
+                        color_scheme="blue", 
+                        radius="full",
+                        background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
+                    ),
                 ),
-                rx.input(placeholder=" Enter Code", value=LandingState.room_key, max_length="20", radius="full", style={"width": "92px"}),
+                on_submit=LandingState.join_room,
             ),
             direction="column",
             align="center",
