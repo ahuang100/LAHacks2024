@@ -2,10 +2,8 @@ import reflex as rx
 from LAHacks2024.server import DBServer
 
 
-<<<<<<< HEAD
 
 # @rx.page(route="/landing")
-=======
 class LandingState(rx.State):
     is_admin: bool = False
     room_key: str = ""
@@ -25,7 +23,6 @@ class LandingState(rx.State):
             print("Joined room with room key %s" % (self.room_key))
         except Exception as e: 
             print(e)
->>>>>>> 831ebcc3b8a1546a4f43f76dc44f00d37af9a81e
 
 # app = rx.App(
 #     stylesheets=[
@@ -63,7 +60,6 @@ def index():
                     "opacity": 0.9,
                 },
             ),
-<<<<<<< HEAD
             rx.hstack(
                 rx.button(
                     "Join", 
@@ -81,7 +77,7 @@ def index():
                     }
                 ),
                 rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
-=======
+            ),
             rx.form.root(
                 rx.hstack(
                     rx.input(
@@ -101,7 +97,6 @@ def index():
                     ),
                 ),
                 on_submit=LandingState.join_room,
->>>>>>> 831ebcc3b8a1546a4f43f76dc44f00d37af9a81e
             ),
             direction="column",
             align="center",
@@ -163,9 +158,11 @@ def index():
         #     width="100%",
         #     height="auto",
         #     controls=False,
+
         #     loop=True,
-        #     autoplay=True,
+        #     playing=True,
         #     muted=True
+        #     width = 
         # ),
         # rx.html("""
         #     <video autoplay muted loop id="myVideo" style="position: fixed; right: 0; bottom: 0; ">
@@ -192,6 +189,7 @@ def index():
 
         ext_align="center",
     )
+    
     
 
 
