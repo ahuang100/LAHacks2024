@@ -1,5 +1,61 @@
 import reflex as rx
+import asyncio
+from datetime import datetime
+from LAHacks2024.pages import abilities
+from LAHacks2024.server import DBServer
 
+class ConvinceMeState(rx.State):
+    names: list[str]
+    room_key: str
+    host_bool: bool
+    deadline: int
+    submitted: bool
+    user_id: str
+    num_rounds: int
+    cur_round: int
+
+    async def get_data(self):
+        convince_state = await self.get_state(abilities.AbilitiesState)
+        self.names = convince_state.player_names
+        self.room_key = convince_state.room_key
+        print(abilities.AbilitiesState.host_bool, type(abilities.AbilitiesState.host_bool))
+        self.host_bool = convince_state.host_bool
+        self.user_id = convince_state.user_id
+        self.num_rounds = convince_state.num_rounds
+        self.cur_round = convince_state.cur_round
+        
+        # Synchronization
+        current_time = datetime.now().time()
+        submit_deadline = current_time.hour * 3600 + current_time.minute * 60 + current_time.second + 30
+        server = DBServer.DBServer()
+        if self.host_bool:
+            self.deadline = submit_deadline
+            server.host_send_time(self.room_key, submit_deadline)
+        else:
+            self.deadline = server.get_host_send_time(self.room_key)
+        yield ConvinceMeState.deadline_counter()
+        
+    @rx.background
+    async def deadline_counter(self):
+        while True:
+            async with self:
+                await asyncio.sleep(1)
+                yield
+                current_time = datetime.now().time()
+                current_time_sec = current_time.hour * 3600 + current_time.minute * 60 + current_time.second
+                # If game started, end it and go to game screen 
+                if current_time_sec > self.deadline:
+                    yield rx.redirect('/yousaid') # deal with dynamic routing later
+                    return
+    
+    def submit_answer(self, answer: dict):
+        print(answer)
+        answer = answer['answer']
+        server = DBServer.DBServer()
+        server.send_argument(self.room_key, self.user_id, answer)
+        self.submitted = True
+
+@rx.page(route="/convinceme", on_load=ConvinceMeState.get_data)
 def convincemepage():
     return rx.script('document.body.style.overflow = "hidden";'), rx.center(
         rx.box(
@@ -42,17 +98,25 @@ def convincemepage():
         ),
         
         # text field at the bottom
-        rx.chakra.input(
-    placeholder="Enter your text here...",
-    style={
-        "position": "fixed",
-        "bottom": "10px",
-        "left": "50%",  # Aligning to the middle horizontally
-        "width": "65%",  # 60% width of the viewport
-        "transform": "translateX(-50%)",  # Centering the text field horizontally
-        "color": "#FFFFFF"  # Making the text white
-    }
-),
+        rx.form.root(
+            rx.chakra.input(
+                name="answer",
+                placeholder="Enter your text here...",
+                style={
+                    "position": "fixed",
+                    "bottom": "10px",
+                    "left": "50%",  # Aligning to the middle horizontally
+                    "width": "65%",  # 60% width of the viewport
+                    "transform": "translateX(-50%)",  # Centering the text field horizontally
+                    "color": "#FFFFFF"  # Making the text white
+                },
+            ),
+            rx.button(
+                "Submit",
+                disabled=ConvinceMeState.submitted
+            ),
+            on_submit=ConvinceMeState.submit_answer,
+        ),
 
 
         # background
@@ -61,6 +125,6 @@ def convincemepage():
         height="100%",
         ext_align="center",
         style={
-                "background-position": "bottom",  # Position the background image at the bottom
-            }
+            "background-position": "bottom",  # Position the background image at the bottom
+        }
     )
