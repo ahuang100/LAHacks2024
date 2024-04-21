@@ -1,31 +1,32 @@
 import reflex as rx
 from LAHacks2024.server import DBServer
 
-
-<<<<<<< HEAD
-
 # @rx.page(route="/landing")
-=======
 class LandingState(rx.State):
-    is_admin: bool = False
+    is_host: bool = False
     room_key: str = ""
-    
+
     def create_room(self):
         server = DBServer.DBServer()
         self.room_key = server.create_room()
+        self.is_host = True
         print("Created room with room key %s" % (self.room_key))
+        self.join_room({'room_key': self.room_key})
+        return rx.redirect('/naming/%s' % (self.room_key))
     
     def join_room(self, room_key: dict):
         room_key = room_key['room_key']
         print("Trying to join with room key %s" % (room_key))
-        server = DBServer.DBServer()
         self.room_key = room_key
+        self.is_host = False
         try:
+            server = DBServer.DBServer()
             server.join_room(self.room_key)
             print("Joined room with room key %s" % (self.room_key))
+            return rx.redirect('/naming/%s' % (self.room_key))
+            
         except Exception as e: 
             print(e)
->>>>>>> 831ebcc3b8a1546a4f43f76dc44f00d37af9a81e
 
 # app = rx.App(
 #     stylesheets=[
@@ -63,25 +64,6 @@ def index():
                     "opacity": 0.9,
                 },
             ),
-<<<<<<< HEAD
-            rx.hstack(
-                rx.button(
-                    "Join", 
-                    border_radius="1em",
-                    box_shadow="rgba(88, 204, 100, 0.5) 0 15px 30px -10px",
-
-                    background_color="#58CC64",
-                    radius="full",
-                    color="white",
-                    opacity=1,
-                    # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
-                    size="4",
-                    _hover={
-                        "opacity": 0.9,
-                    }
-                ),
-                rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
-=======
             rx.form.root(
                 rx.hstack(
                     rx.input(
@@ -101,7 +83,6 @@ def index():
                     ),
                 ),
                 on_submit=LandingState.join_room,
->>>>>>> 831ebcc3b8a1546a4f43f76dc44f00d37af9a81e
             ),
             direction="column",
             align="center",
