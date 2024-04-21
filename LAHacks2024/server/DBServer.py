@@ -4,7 +4,7 @@ import uuid
 import ssl
 
 CONNECTION_STRING = "mongodb+srv://jpan287:L2pEGi2Po7dUYYX5@lahacks24.3fh9yjd.mongodb.net/?retryWrites=true&w=majority"
-MAX_PLAYERS = 8
+MAX_PLAYERS = 12
 
 class DBServer:
     def __init__(self):
@@ -28,6 +28,8 @@ class DBServer:
             'player_ids': [],
             'player_names': [],
             'num_players': 0,
+            'game_started': False,
+            'host_start_time': -1,
         }
         self.collection.insert_one(room_data)
         return room_key
@@ -59,5 +61,23 @@ class DBServer:
 
     # Gets the usernames of the other players
     def get_players(self, room_key):
-        player_names = self.collection.find({'player_names'}, {})
+        player_names_query = self.collection.find({'key': room_key}, {'_id': 0, 'player_names': 1})
+        player_names = []
+        for doc in player_names_query:
+            if 'player_names' in doc:
+                player_names.extend(doc['player_names'])
         return player_names
+    
+    def start_game(self, room_key):
+        self.collection.update_one({'key': room_key}, {'$set': {'game_started': True}})
+        return True
+
+    def check_start(self, room_key):
+        return self.collection.find_one({'key': room_key}, {'game_started': 1, '_id': 0})['game_started']
+    
+    def host_send_time(self, room_key, time):
+        self.collection.update_one({'key': room_key}, {'$set': {'host_start_time': time}})
+
+    def get_host_send_time(self, room_key):
+        return self.collection.find_one({'key': room_key}, {'host_start_time': 1, '_id': 0})['host_start_time']
+    

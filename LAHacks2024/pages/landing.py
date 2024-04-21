@@ -18,7 +18,6 @@ class LandingState(rx.State):
         room_key = room_key['room_key']
         print("Trying to join with room key %s" % (room_key))
         self.room_key = room_key
-        self.is_host = False
         try:
             server = DBServer.DBServer()
             server.join_room(self.room_key)
