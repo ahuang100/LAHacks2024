@@ -1,11 +1,8 @@
 import reflex as rx
 from LAHacks2024.server import DBServer
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> b8d748391324515115b1c1bd8ef2989567b47332
 # @rx.page(route="/landing")
 class LandingState(rx.State):
     is_host: bool = False
@@ -32,14 +29,6 @@ class LandingState(rx.State):
             
         except Exception as e: 
             print(e)
-
-# app = rx.App(
-#     stylesheets=[
-#      "https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap",
-#    ],
-#  )
-
-# stylesheets=["https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap"]
 
 
 def index():
@@ -69,7 +58,6 @@ def index():
                     "opacity": 0.9,
                 },
             ),
-<<<<<<< HEAD
             rx.hstack(
                 rx.button(
                     "Join", 
@@ -88,8 +76,6 @@ def index():
                 ),
                 rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
             ),
-=======
->>>>>>> b8d748391324515115b1c1bd8ef2989567b47332
             rx.form.root(
                 rx.hstack(
                     rx.input(
@@ -129,8 +115,9 @@ def index():
                 rx.chakra.popover_content(
                     rx.chakra.popover_header("Game Rules"),
                     rx.list.ordered(
-                        rx.list.item("Join a game"),
-                        rx.list.item("Select an ability"),
+                        rx.list.item("Join a game."),
+                        rx.list.item("Select an ability."),
+                        rx.list.item("Prove you'd win."),
                     ),
                     
                     rx.chakra.popover_close_button(),
