@@ -33,10 +33,6 @@ def update_word():
 # rx.thread(update_word)
 
 
-        
-
-    
-
 # Run the Reflex app
 def index():
     text = []
