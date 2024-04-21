@@ -32,7 +32,8 @@ class LandingState(rx.State):
 
 
 def index():
-    return rx.center(
+    return rx.box(
+    rx.center(
         #main middle content
         rx.flex(
             rx.chakra.text("Power Parley", fontFamily="IM Fell DW Pica SC", lineHeight="1.3",
@@ -58,49 +59,55 @@ def index():
                     "opacity": 0.9,
                 },
             ),
-            rx.hstack(
-                rx.button(
-                    "Join", 
-                    border_radius="1em",
-                    box_shadow="rgba(88, 204, 100, 0.5) 0 15px 30px -10px",
+            # rx.hstack(
+            #     rx.button(
+            #         "Join", 
+            #         border_radius="1em",
+            #         box_shadow="rgba(88, 204, 100, 0.5) 0 15px 30px -10px",
 
-                    background_color="#58CC64",
-                    radius="full",
-                    color="white",
-                    opacity=1,
-                    # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
-                    size="4",
-                    _hover={
-                        "opacity": 0.9,
-                    }
-                ),
-                rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
-            ),
+            #         background_color="#58CC64",
+            #         radius="full",
+            #         color="white",
+            #         opacity=1,
+            #         # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
+            #         size="4",
+            #         _hover={
+            #             "opacity": 0.9,
+            #         }
+            #     ),
+            #     rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
+            # ),
             rx.form.root(
                 rx.hstack(
+                    rx.button(
+                        "Join", 
+                        border_radius="1em",
+                        box_shadow="rgba(88, 204, 100, 0.5) 0 15px 30px -10px",
+                        background_color="#58CC64",
+                        radius="full",
+                        color="white",
+                        opacity=1,
+                        type="submit",
+                        style={"width": "60px", "height": "48px"},
+                    ),
                     rx.input(
                         name="room_key",
                         placeholder="Enter Code", 
                         max_length="8", 
                         required=True,
                         radius="full", 
-                        style={"width": "92px"}
+                        style={"width": "92px", "height": "48px"},
                     ),
-                    rx.button(
-                        "Join", 
-                        type="submit",
-                        color_scheme="blue", 
-                        radius="full",
-                        background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
-                    ),
+                    
                 ),
                 on_submit=LandingState.join_room,
             ),
             direction="column",
             align="center",
             justify="center",
-            style={"margin-bottom": "20%"},
+            style={"margin-bottom": "20%", "z_index": "1"},
             spacing="8",
+            
             
             height="100vh",  # This ensures the flex container fills the viewport height
         ),
@@ -183,10 +190,60 @@ def index():
         # background="radial-gradient(circle at 22% 11%, rgba(62, 180, 137, .40), hsla(0, 0%, 0%, 0) 19%), radial-gradient(circle at 82% 25%, rgba(33, 150, 243, .36), hsla(0, 0%, 0%, 0) 35%), radial-gradient(circle at 25% 61%, rgba(250, 128, 114, .56), hsla(0, 0%, 0%, 0) 55%)",
         # rx.video(url=""),
         
-        
+        style={
+                    "z_index": "-10",
+                },
         background="linear-gradient(180deg, #a45637 0%, #3e2115 100%)",
 
         ext_align="center",
+    ),
+    
+    
+        rx.box(
+            
+            rx.image(
+                src="/courtroom.png",
+                style={
+                    "position": "fixed",
+                    "left": "3vw",
+                    "bottom": "23vh",
+                    "width": "500px",  # Adjust image size as needed
+                    "height": "auto",
+                    "z_index": "0",
+                }
+            ),
+            
+            direction="column",
+            align="center",
+            justify="center",
+            style={
+                "width": "100%",
+                "height": "100vh",
+                "position": "relative", 
+            },
+        ),
+        #lawyer gif
+        rx.box(
+            rx.image(
+                src="/lawyer.gif",
+                style={
+                    "position": "fixed",
+                    "left": "55vw",
+                    "bottom": "38vh",
+                    "width": "700px",  # Adjust image size as needed
+                    "height": "auto",
+                    "z_index": "0",
+                }
+            ),
+            direction="column",
+            align="center",
+            justify="center",
+            style={
+                "width": "100%",
+                "height": "100vh",
+                "position": "relative"
+            }
+        ),
     )
     
     
