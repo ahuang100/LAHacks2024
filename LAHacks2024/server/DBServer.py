@@ -30,6 +30,9 @@ class DBServer:
             'num_players': 0,
             'game_started': False,
             'host_start_time': -1,
+            'arguments': [],
+            'abilities': [],
+            'response': '',
         }
         self.collection.insert_one(room_data)
         return room_key
@@ -59,7 +62,7 @@ class DBServer:
         self.collection.update_one({'key': room_key}, {'$push': {'player_names': user_name}})
         return user_id
 
-    # Gets the usernames of the other players
+    # Gets the usernames of all the players
     def get_players(self, room_key):
         player_names_query = self.collection.find({'key': room_key}, {'_id': 0, 'player_names': 1})
         player_names = []
@@ -81,3 +84,39 @@ class DBServer:
     def get_host_send_time(self, room_key):
         return self.collection.find_one({'key': room_key}, {'host_start_time': 1, '_id': 0})['host_start_time']
     
+    def send_argument(self, room_key, user_id, argument):
+        self.collection.update_one({'key': room_key}, {'$push': {'arguments': (user_id, argument)}})
+    
+    def get_arguments(self, room_key):
+        # Get the list of arguments (tuples of (user_id, argument))
+        arguments_query = self.collection.find({'key: room_key'}, {'arguments': 1, '_id': 0})['arguments']
+        arguments = []
+        for arg in arguments_query:
+            if 'arguments' in arg:
+                arguments.extend(arg['arguments'])
+        # Get the list of user_ids
+        user_ids_query = self.collection.find({'key: room_key'}, {'player_ids': 1, '_id': 0})['player_ids']
+        user_ids = []
+        for id in user_ids:
+            if 'player_ids' in id:
+                user_ids.extend(id['player_ids'])
+        sorted_arguments = sorted(arguments, key=lambda x: arguments.index(x[0]))
+        return [t[1] for t in sorted_arguments]
+    
+    def set_abilities(self, room_key, abilities):
+        for a in abilities:
+            self.collection.update_one({'key': room_key}, {'$push': {'arguments': a}})
+    
+    def get_abilities(self, room_key):
+        abilities_query = self.collection.find({'key': room_key}, {'_id': 0, 'abilities': 1})
+        abilities = []
+        for a in abilities:
+            if 'abilities' in a:
+                abilities.extend(a['abilities'])
+        return abilities
+
+    def set_response(self, room_key, response):
+        self.collection.update_one({'key': room_key}, {'$set': {'response': response}})
+
+    def get_response(self, room_key):
+        self.collection.find_one({'key': room_key}, {'response': 1, '_id': 0})['response']

@@ -4,6 +4,7 @@ from LAHacks2024.pages import landing
 
 class NamingState(rx.State):
     name: str = ""
+    user_id: str
     room_key: str = ""
     is_host: bool = False
 
@@ -31,7 +32,7 @@ class NamingState(rx.State):
         try: 
             print("Room key: " + self.room_key)
             server = DBServer.DBServer()
-            server.check_username(self.room_key, self.name)
+            self.user_id = server.check_username(self.room_key, self.name)
             print("Joined room %s using name %s" % (self.room_key, self.name))
             return rx.redirect('/room-page/%s' % (self.room_key))
         except Exception as e:

@@ -10,10 +10,12 @@ class RoomState(rx.State):
   room_key: str = ""
   player_names: list[str]
   start: bool = False
+  user_id: str
 
   async def get_data(self): 
     naming_state = await self.get_state(naming.NamingState)
     self.host_bool = naming_state.is_host
+    self.user_id = naming_state.user_id
     print(self.host_bool)
     self.room_key = naming_state.room_key
     server = DBServer.DBServer()
@@ -40,5 +42,5 @@ class RoomState(rx.State):
         print(self.start)
         # If game started, end it and go to game screen 
         if self.start:
-          yield rx.redirect('/')
+          yield rx.redirect('/abilities') # deal with dynamic routing later
           return
