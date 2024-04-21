@@ -1,6 +1,8 @@
 import reflex as rx
 from LAHacks2024.server import DBServer
 
+
+
 # @rx.page(route="/landing")
 class LandingState(rx.State):
     is_host: bool = False
@@ -26,14 +28,6 @@ class LandingState(rx.State):
             
         except Exception as e: 
             print(e)
-
-# app = rx.App(
-#     stylesheets=[
-#      "https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap",
-#    ],
-#  )
-
-# stylesheets=["https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap"]
 
 
 def index():
@@ -62,6 +56,24 @@ def index():
                 _hover={
                     "opacity": 0.9,
                 },
+            ),
+            rx.hstack(
+                rx.button(
+                    "Join", 
+                    border_radius="1em",
+                    box_shadow="rgba(88, 204, 100, 0.5) 0 15px 30px -10px",
+
+                    background_color="#58CC64",
+                    radius="full",
+                    color="white",
+                    opacity=1,
+                    # background_image="linear-gradient(144deg,#FDFD96,#673AB7 50%,#800020)",
+                    size="4",
+                    _hover={
+                        "opacity": 0.9,
+                    }
+                ),
+                rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
             ),
             rx.form.root(
                 rx.hstack(
@@ -102,8 +114,9 @@ def index():
                 rx.chakra.popover_content(
                     rx.chakra.popover_header("Game Rules"),
                     rx.list.ordered(
-                        rx.list.item("Join a game"),
-                        rx.list.item("Select an ability"),
+                        rx.list.item("Join a game."),
+                        rx.list.item("Select an ability."),
+                        rx.list.item("Prove you'd win."),
                     ),
                     
                     rx.chakra.popover_close_button(),
@@ -143,9 +156,11 @@ def index():
         #     width="100%",
         #     height="auto",
         #     controls=False,
+
         #     loop=True,
-        #     autoplay=True,
+        #     playing=True,
         #     muted=True
+        #     width = 
         # ),
         # rx.html("""
         #     <video autoplay muted loop id="myVideo" style="position: fixed; right: 0; bottom: 0; ">
@@ -172,6 +187,7 @@ def index():
 
         ext_align="center",
     )
+    
     
 
 
