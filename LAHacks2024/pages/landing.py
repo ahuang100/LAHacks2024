@@ -1,26 +1,35 @@
 import reflex as rx
 from LAHacks2024.server import DBServer
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b8d748391324515115b1c1bd8ef2989567b47332
 # @rx.page(route="/landing")
 class LandingState(rx.State):
-    is_admin: bool = False
+    is_host: bool = False
     room_key: str = ""
-    
+
     def create_room(self):
         server = DBServer.DBServer()
         self.room_key = server.create_room()
+        self.is_host = True
         print("Created room with room key %s" % (self.room_key))
+        self.join_room({'room_key': self.room_key})
+        return rx.redirect('/naming/%s' % (self.room_key))
     
     def join_room(self, room_key: dict):
         room_key = room_key['room_key']
         print("Trying to join with room key %s" % (room_key))
-        server = DBServer.DBServer()
         self.room_key = room_key
+        self.is_host = False
         try:
+            server = DBServer.DBServer()
             server.join_room(self.room_key)
             print("Joined room with room key %s" % (self.room_key))
+            return rx.redirect('/naming/%s' % (self.room_key))
+            
         except Exception as e: 
             print(e)
 
@@ -60,6 +69,7 @@ def index():
                     "opacity": 0.9,
                 },
             ),
+<<<<<<< HEAD
             rx.hstack(
                 rx.button(
                     "Join", 
@@ -78,6 +88,8 @@ def index():
                 ),
                 rx.input(placeholder=" Enter Code", max_length="20", radius="full", style={"width": "92px", "height": "48px"}),
             ),
+=======
+>>>>>>> b8d748391324515115b1c1bd8ef2989567b47332
             rx.form.root(
                 rx.hstack(
                     rx.input(

@@ -47,7 +47,8 @@ class DBServer:
     # Checks if the username user wants is taken yet or not
     def check_username(self, room_key, user_name):
         # Check if the username already exists in database
-        if len(self.collection.find({'player_names': {'$in': [user_name]}})) != 0:
+        username_query = self.collection.find_one({'key': room_key, 'player_names': {'$elemMatch': {'$eq': user_name}}})
+        if username_query is not None:
             raise Exception('Room %s: name %s already taken' % (room_key, user_name))
         # Creates a user_id, increments the number of players in room, adds user info to room
         user_id = self.generate_user_id()
